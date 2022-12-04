@@ -12,16 +12,15 @@ page-layout: full
 library(tidyverse)
 library(dplyr)
 library(stringr)
-
+library(arules)
+library(arulesViz)
 ```
 
 # **Statement of question and interest**
 
 For our project we are interested in drug consumption and the association to personality and behavior. For instance, we want to further evaluate the different types of risk to be for each drug. We can split up the drugs based on how they are scheduled or classified in as controlled substances. \####[***TO BE CONTINUED***]{.underline}- include something about which drug(s) we are looking at -- we can compare based on drug class/schedule + drug usage + personality AND/OR based on educations level + drug usage + personality####
 
-1.  Question:
-
-2.  Question (optional):
+1.  Question: \*What factors in personality and prior drug use are predominantly associated with the use of specific drugs -- especially hard drugs?\*
 
 ## Source & Dataset Description
 
@@ -31,7 +30,7 @@ You can access our data here, see [GitHub](https://github.com/paph3285/Drug_Cons
 
 ### **Contents of the Dataset:**
 
-###### **Featured Attributes for Quantified Data**
+#### **Featured Attributes for Quantified Data**
 
 -   *ID*: total number of 1885 records in this database
 
@@ -45,7 +44,7 @@ You can access our data here, see [GitHub](https://github.com/paph3285/Drug_Cons
 
 -   *Ethnicity*: participant's ethnicity
 
-###### **Featured Attributes for Personality measurements (**NEO-FFI-R)
+#### **Featured Attributes for Personality measurements (**NEO-FFI-R)
 
 -   *Nscore*: neuroticism
 
@@ -61,7 +60,7 @@ You can access our data here, see [GitHub](https://github.com/paph3285/Drug_Cons
 
 -   *SS*: sensation seeing (measured by ImpSS)
 
-###### **Consumption usage of 18 legal and illegal drugs**
+#### **Consumption usage of 18 legal and illegal drugs**
 
 1.  *Alcohol*: alcohol consumption
 
@@ -101,7 +100,7 @@ You can access our data here, see [GitHub](https://github.com/paph3285/Drug_Cons
 
 19. *VSA*: class of volatile substance abuse consumption
 
-###### **Rating's for Drug Use**
+#### **Rating's for Drug Use**
 
 -   CL0: Never Used
 
@@ -137,12 +136,11 @@ knitr::kable(
 ### Subset dataframe
 
 ```{r Subset Dataframe, echo=FALSE}
-#| echo: false
+#| echo: false\
 
-Subset_Drugs <- df %>% select(-c("ID", "Ethnicity", "Country", "Education", "Age", "Gender", "Caff", "Choc", "Semer"))
+Subset_Drugs <- df %>% select(-c("ID", "Ethnicity", "Country", "Education", "Age", "Gender", "Caff", "Choc", "Semer","Nscore","Escore","Oscore","AScore","Cscore","Impulsive","SS"))
 
 head(Subset_Drugs)
-
 ```
 
 ### Examine Data
@@ -160,7 +158,7 @@ sum(is.na(df))
 ```{r Clean Data, echo=FALSE}
 #| echo: false
 
-categorical_columns = c('Alcohol', 'Amphet', 'Amyl', 'Benzos', 'Cannabis', 'Coke', 'Crack', 'Ecstasy', 'Heroin', 'Ketamine', 'Legalh', 'LSD', 'Meth', 'Mushrooms', 'Nicotine', 'Semer', 'VSA')
+categorical_columns = c('Alcohol', 'Amphet', 'Amyl', 'Benzos', 'Cannabis', 'Coke', 'Crack', 'Ecstasy', 'Heroin', 'Ketamine', 'Legalh', 'LSD', 'Meth', 'Mushrooms', 'Nicotine', 'VSA')
 
 # TODO -Remove columns ID,Choc - chocolate consumption, Semer - class of fictitious drug Semeron consumption (i.e. control)
 
@@ -168,15 +166,14 @@ categorical_columns = c('Alcohol', 'Amphet', 'Amyl', 'Benzos', 'Cannabis', 'Coke
 
 # We will also drop unnecesary columns
 
-# convert drug columns to numeric
+# convert drug columns to numericaL
 for (col in categorical_columns) {
-  df[col] = as.numeric(gsub("CL", "", df[, col]))
+  Subset_Drugs[col] = as.numeric(gsub("CL", "", Subset_Drugs[, col]))
   
   # categorize drug column as either 'used' (1) or 'never used' (0)
   # if Drugs[col] == 0 (never used) or Drugs[col] == 1 (used over a decade ago), cateogorize them as a non-user
-  df[col] = ifelse((df[col] == 0 | df[col] == 1), 0, 1)
+  Subset_Drugs[,col]=ifelse((Subset_Drugs[,col] == 0 | Subset_Drugs[,col] == 1), 0, 1)
 }
-
 ```
 
 ```{r Combining Columns, echo=FALSE}
@@ -184,37 +181,72 @@ for (col in categorical_columns) {
 
 # combine columns of similar drugs
 # TODO - do we want to do this? How should we group them? 
-Drugs_mutate <- transform(df, Psychedelics = pmax(LSD, Mushrooms), OTC = pmax(Alcohol, Cannabis, Nicotine), Illegal = pmax(Coke, Crack, Ecstasy, Heroin, Meth))
+# These should be extra columns to run analyses on in addition to the individual drugs.
+Subset_Drugs <- Subset_Drugs %>%
+  mutate(Psychedelics = pmax(LSD, Mushrooms), Sedatives = pmax(Alcohol, Benzos, Ketamine), Stimulants = pmax(Amphet,Coke,Crack,Ecstasy,Meth))
+# Cannabis shouldn't be OTC, this survey was predominantly done in the UK, in which Marijuana remains a controlled substance. Illegal columns doesn't make any sense as most of these drugs are illegal to use recreationally. We should use the inverse of "OTC" instead.
 
 # drop redudent columns
-# TODO - drop all columns that have been combined
-Drugs_subset <- Drugs_mutate %>% select(-c('LSD', 'Mushrooms', 'Alcohol', 'Cannabis', 'Nicotine', 'Coke', 'Crack', 'Ecstasy', 'Heroin', 'Meth'))
+# TODO - drop all columns that have been combined. Don't do this, there's still many useful insights ot be had with the original columns.
+```
 
+## Using Frequency Pattern Analysis to find common patterns in drug use.
+
+One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
+
+```{r Creating a Dataframe for FP, echo = FALSE}
+All_Trans <- ( Subset_Drugs > 0 )
+All_Trans <- as.data.frame( Subset_Drugs > 0)
+Drug_Trans <- All_Trans %>% select(`Alcohol`:`VSA`)
+No_OTC <- All_Trans %>% select(-c(`Alcohol`,`Nicotine`,`Cannabis`,`Psychedelics`,`Stimulants`,`Sedatives`))
+Hard_Trans <- No_OTC %>% select(-c(`Ecstasy`,`Mushrooms`))
+Class_Trans <- All_Trans %>% select(`Psychedelics`:`Stimulants`)
+
+drug_rules <- apriori(Drug_Trans,list(
+  support = 0.4,
+  confidence = 0.9,
+  minlen = 2
+))
+
+inspect(drug_rules)
 
 ```
 
-### Rename Columns
+When looking at all drug relations, the most common 'basket' of drugs used in combination is the three most common drugs used: Alcohol, Cannabis, and Nicotine. While these three are often used together, they are also found to be the main drug used in combination with other, less common drugs. This shows their status as "gateway" drugs. Nearly everyone who uses some of the harder, less common drugs also uses one of these three.
 
-```{r Rename Columns, echo=FALSE}
-#| echo: false
+```{r FP rules for hard drugs (no alcohol, tobacco, weed, or general groupings)}
+hard_drug_rules <- apriori(No_OTC,list(
+ support = 0.18,
+ confidence = 0.9,
+ minlen = 2
+))
 
-# TODO - why are new column names from 'mutate' above wrong? this shouldn't be needed
-Drugs_subset <- Drugs_subset %>% rename("Psychedelics" = "LSD.1", "OTC" = "Alcohol.1", "Illegal" = "Coke.1")
-
-# regular print wasn't working for me, can remove
-print.data.frame(head(Drugs_subset))
+inspect(hard_drug_rules)
 ```
 
-## Correlation Matrix
+When removing the three 'gateway' drugs from the market baskets, a new pattern emerges. Around 20% of drug users use a combination of drugs including Cocaine, Amphetamine, LSD, Mushrooms, Benzos and Ecstasy (MDMA). These drugs are a varied group, and could be considered "medium" drugs, although some of them, such as Amphetamines and Benzodiazapines, are as volatile as the 'harder' drugs included in this data table. Within this group of drugs, Psilocybin and Ecstasy appear to act as the "gateway".
 
-```{r Corr-Matrix, echo=FALSE}
-#| echo: false
+```{r}
 
-# TODO - can we gather any relevant info from this? doesn't seem like there's much correlation between personality traits and user/non-user
+hard_rules <- apriori(Hard_Trans,list(
+ support = 0.11,
+ confidence = 0.9,
+ minlen = 2
+))
 
-## res <- cor(Drugs_subset)
-##res
+inspect(hard_rules)
+```
 
+Removing the secondary "gateway" drugs from the possible combinations gives a third set of rules, in which Benzodiazapines predict the use of other hard drugs such as Amphetamines, Methamphetamine, and Cocaine.
+
+```{r drug class Rules}
+class_rules <- apriori(Class_Trans,list(
+ support = 0.4,
+ confidence = 0.9,
+ minlen = 2
+))
+
+inspect(class_rules)
 ```
 
 ### Visualize Correlation #1
@@ -222,7 +254,7 @@ print.data.frame(head(Drugs_subset))
 ```{r Graphing 1, echo=FALSE}
 #| echo: false
 # TODO - graph findings
-
+plot(class)
 ```
 
 ### Visualize Correlation #2
@@ -230,13 +262,6 @@ print.data.frame(head(Drugs_subset))
 ```{r Graphing 2, echo=FALSE}
 #| echo: false
 # TODO - graph findings
-
-```
-
-## Model/Analysis
-
-```{r Analysis, echo=FALSE}
-#| echo: false
 
 ```
 
@@ -250,7 +275,7 @@ asdknflaslnksnfadnfkfllankldfnnvavlvnlnnvnldnvlnvslv
 
 sdnalsnsldnvslvn
 
-##### 2. Evan's Bias- 
+##### 2. Evan's Bias-
 
 sdnalsnsldnvslvn
 
@@ -265,3 +290,4 @@ Some personal biases that I can acknowledge from this project and dataset are th
 
 sessionInfo()
 ```
+
