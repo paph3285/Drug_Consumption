@@ -198,6 +198,8 @@ drug_rules <- apriori(Drug_Trans,list(
 ))
 
 inspect(drug_rules)
+
+plot(drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 ```
 
 ```{r FP rules for hard drugs (no alcohol, tobacco, weed, or general groupings), echo = FALSE}
@@ -209,6 +211,7 @@ hard_drug_rules <- apriori(No_OTC,list(
 
 inspect(hard_drug_rules)
 
+plot(hard_drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 ```
 
 ```{r echo = FALSE}
@@ -220,6 +223,8 @@ hard_rules <- apriori(Hard_Trans,list(
 ))
 
 inspect(hard_rules)
+
+plot(hard_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 
 ```
 
@@ -235,6 +240,12 @@ inspect(class_rules)
 ```
 
 ## Conclusion
+
+```{r echo = FALSE}
+
+plot(class_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
+
+```
 
 One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
 
