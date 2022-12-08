@@ -30,7 +30,9 @@ We got our database from here, see [Drug Consumptions (UCI)](https://www.kaggle.
 
 You can access our data here, see [GitHub](https://github.com/paph3285/Drug_Consumption)
 
-### **Contents of the Dataset:**
+### **Dataset Contents:**
+
+There are 12 attributes that are categorized based on their background demographic and personality measurements. These attributes are assessed across 18 central nervous system (CNS) psychoactive drugs. The drugs selected includes both illicit and licit.
 
 #### **Featured Attributes for Quantified Data**
 
@@ -180,8 +182,6 @@ knitr::kable(
 
 ### Using Frequency Pattern Analysis to find common patterns in drug use.
 
-One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
-
 ```{r Creating a Dataframe for FP, echo = FALSE}
 
 All_Trans <- ( Subset_Drugs > 0 )
@@ -200,8 +200,6 @@ drug_rules <- apriori(Drug_Trans,list(
 inspect(drug_rules)
 ```
 
-When looking at all drug relations, the most common 'basket' of drugs used in combination is the three most common drugs used: Alcohol, Cannabis, and Nicotine. While these three are often used together, they are also found to be the main drug used in combination with other, less common drugs. This shows their status as "gateway" drugs. Nearly everyone who uses some of the harder, less common drugs also uses one of these three.
-
 ```{r FP rules for hard drugs (no alcohol, tobacco, weed, or general groupings), echo = FALSE}
 hard_drug_rules <- apriori(No_OTC,list(
  support = 0.18,
@@ -212,8 +210,6 @@ hard_drug_rules <- apriori(No_OTC,list(
 inspect(hard_drug_rules)
 
 ```
-
-When removing the three 'gateway' drugs from the market baskets, a new pattern emerges. Around 20% of drug users use a combination of drugs including Cocaine, Amphetamine, LSD, Mushrooms, Benzos and Ecstasy (MDMA). These drugs are a varied group, and could be considered "medium" drugs, although some of them, such as Amphetamines and Benzodiazapines, are as volatile as the 'harder' drugs included in this data table. Within this group of drugs, Psilocybin and Ecstasy appear to act as the "gateway".
 
 ```{r echo = FALSE}
 
@@ -226,8 +222,6 @@ hard_rules <- apriori(Hard_Trans,list(
 inspect(hard_rules)
 
 ```
-
-Removing the secondary "gateway" drugs from the possible combinations gives a third set of rules, in which Benzodiazapines predict the use of other hard drugs such as Amphetamines, Methamphetamine, and Cocaine.
 
 ```{r drug class Rules, echo = FALSE}
 class_rules <- apriori(Class_Trans,list(
@@ -242,9 +236,21 @@ inspect(class_rules)
 
 ## Conclusion
 
+One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
+
+When looking at all drug relations, the most common 'basket' of drugs used in combination is the three most common drugs used: Alcohol, Cannabis, and Nicotine. While these three are often used together, they are also found to be the main drug used in combination with other, less common drugs. This shows their status as "gateway" drugs. Nearly everyone who uses some of the harder, less common drugs also uses one of these three.
+
+When removing the three 'gateway' drugs from the market baskets, a new pattern emerges. Around 20% of drug users use a combination of drugs including Cocaine, Amphetamine, LSD, Mushrooms, Benzos and Ecstasy (MDMA). These drugs are a varied group, and could be considered "medium" drugs, although some of them, such as Amphetamines and Benzodiazapines, are as volatile as the 'harder' drugs included in this data table. Within this group of drugs, Psilocybin and Ecstasy appear to act as the "gateway".
+
 ##### Group Biases -
 
-Some personal biases that we can acknowledge from this project and dataset are the "Drugs" listed. We would have refrained from classifying a handful of the drugs presented and would not have included them in the original dataset. Precisely alcohol, caffeine, chocolate, and possibly legal highs. One possible explanation to our bias, is due to how prevalent or not these specifics drugs are in our world. Alcohol, caffeine, chocolate, and let's say marijuana may be more accessibly available, depending on where you live, than let's say meth, heroin, or benzos, and so forth. Another example is social pressure and culture and how that may influence our unconscious of different drugs. For example marijuana and psilocybin are becoming popular alternative drugs to use for medical and recreational purposes in the U.S., but that may not reflect the same for in the U.K. or Australia per say. How we perceive the classification and use of these drugs holds bias. Lastly, the word "drug(s)" carries a negative connotation behind it. More often than not one mind jumps to 1) illegal, 2) substance use disorder (SUD), 3) problematic. Again, a lot of these are associated with more illicit drugs like cocaine, meth, heroin, etc., not so much with alcohol, chocolate, caffeine, and marijuana. How we perceive these drugs is a bias of itself. If we were to not include some of these drugs in the dataset, that would be unethical of us as a data scientist.
+Some personal biases that we can acknowledge from this project and dataset are the "Drugs" listed. We would have refrained from classifying a handful of the drugs presented and would not have included them in the original dataset. Precisely alcohol, caffeine, chocolate, and possibly legal highs.
+
+A possible explanation to our bias, is due to how prevalent or not these specifics drugs are in our world. Alcohol, caffeine, chocolate, and let's say marijuana may be more accessibly available, depending on where you live, than let's say meth, heroin, or benzos, and so forth.
+
+Another example of bias is social pressure and cultural differences. How that may influence our unconscious biases of different drugs. For example marijuana and psilocybin are becoming popular alternative drugs to use for medical and recreational purposes in the U.S., but that may not reflect the same for in the U.K. or Australia per say. How we perceive the classification and use of these drugs holds lots of bias.
+
+Lastly, the word "drug(s)" carries a negative connotation behind it. More often than not one mind jumps to 1) illegal, 2) substance use disorder (SUD), 3) problematic. Again, a lot of these are associated with more illicit drugs like cocaine, meth, heroin, etc., not so much with alcohol, chocolate, caffeine, and marijuana. How we perceive these drugs is a bias of itself. If we were to not include some of these drugs in the dataset, that would be unethical of us as a data scientist.
 
 # SessionInfo
 
