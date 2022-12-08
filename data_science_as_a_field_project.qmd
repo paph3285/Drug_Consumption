@@ -3,6 +3,7 @@ title: "Data Science as a Field Project"
 author: "Kate Borden, Evan McCormick, Paige Phillips"
 date: "12/08/2022"
 format: html
+self-contained: true
 toc: true
 editor: visual
 page-layout: full
