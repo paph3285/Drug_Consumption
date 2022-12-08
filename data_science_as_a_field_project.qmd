@@ -199,7 +199,6 @@ drug_rules <- apriori(Drug_Trans,list(
 
 inspect(drug_rules)
 
-plot(drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 ```
 
 ```{r FP rules for hard drugs (no alcohol, tobacco, weed, or general groupings), echo = FALSE}
@@ -211,7 +210,6 @@ hard_drug_rules <- apriori(No_OTC,list(
 
 inspect(hard_drug_rules)
 
-plot(hard_drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 ```
 
 ```{r echo = FALSE}
@@ -223,8 +221,6 @@ hard_rules <- apriori(Hard_Trans,list(
 ))
 
 inspect(hard_rules)
-
-plot(hard_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 
 ```
 
@@ -241,17 +237,36 @@ inspect(class_rules)
 
 ## Conclusion
 
+One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
+
+
 ```{r echo = FALSE}
 
 plot(class_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
 
 ```
 
-One pattern found in the data is that people's drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.
+
+```{r echo = FALSE}
+plot(drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
+
+```
+
 
 When looking at all drug relations, the most common 'basket' of drugs used in combination is the three most common drugs used: Alcohol, Cannabis, and Nicotine. While these three are often used together, they are also found to be the main drug used in combination with other, less common drugs. This shows their status as "gateway" drugs. Nearly everyone who uses some of the harder, less common drugs also uses one of these three.
 
+```{r echo = FALSE}
+plot(hard_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
+
+```
+
+
 When removing the three 'gateway' drugs from the market baskets, a new pattern emerges. Around 20% of drug users use a combination of drugs including Cocaine, Amphetamine, LSD, Mushrooms, Benzos and Ecstasy (MDMA). These drugs are a varied group, and could be considered "medium" drugs, although some of them, such as Amphetamines and Benzodiazapines, are as volatile as the 'harder' drugs included in this data table. Within this group of drugs, Psilocybin and Ecstasy appear to act as the "gateway".
+
+```{r echo = FALSE}
+plot(hard_drug_rules, method = "graph", measure = "support", shading = "support") + scale_color_gradient()
+```
+
 
 ##### Group Biases -
 
