@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.262">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kate Borden, Evan McCormick, Paige Phillips">
+<meta name="dcterms.date" content="2022-12-08">
+
+<title>Data Science as a Field Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="data_science_as_a_field_project_files/libs/clipboard/clipboard.min.js"></script>
+<script src="data_science_as_a_field_project_files/libs/quarto-html/quarto.js"></script>
+<script src="data_science_as_a_field_project_files/libs/quarto-html/popper.min.js"></script>
+<script src="data_science_as_a_field_project_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="data_science_as_a_field_project_files/libs/quarto-html/anchor.min.js"></script>
+<link href="data_science_as_a_field_project_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="data_science_as_a_field_project_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="data_science_as_a_field_project_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="data_science_as_a_field_project_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="data_science_as_a_field_project_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#statement-of-question-and-interest" id="toc-statement-of-question-and-interest" class="nav-link active" data-scroll-target="#statement-of-question-and-interest"><strong>Statement of question and interest</strong></a>
+  <ul class="collapse">
+  <li><a href="#source-dataset-description" id="toc-source-dataset-description" class="nav-link" data-scroll-target="#source-dataset-description">Source &amp; Dataset Description</a>
+  <ul class="collapse">
+  <li><a href="#dataset-contents" id="toc-dataset-contents" class="nav-link" data-scroll-target="#dataset-contents"><strong>Dataset Contents:</strong></a></li>
+  </ul></li>
+  <li><a href="#examining-the-data" id="toc-examining-the-data" class="nav-link" data-scroll-target="#examining-the-data">Examining the Data</a>
+  <ul class="collapse">
+  <li><a href="#subset-dataframe" id="toc-subset-dataframe" class="nav-link" data-scroll-target="#subset-dataframe">Subset dataframe</a></li>
+  <li><a href="#cleaning-the-data" id="toc-cleaning-the-data" class="nav-link" data-scroll-target="#cleaning-the-data">Cleaning the data</a></li>
+  </ul></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#using-frequency-pattern-analysis-to-find-common-patterns-in-drug-use." id="toc-using-frequency-pattern-analysis-to-find-common-patterns-in-drug-use." class="nav-link" data-scroll-target="#using-frequency-pattern-analysis-to-find-common-patterns-in-drug-use.">Using Frequency Pattern Analysis to find common patterns in drug use.</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#sessioninfo" id="toc-sessioninfo" class="nav-link" data-scroll-target="#sessioninfo">SessionInfo</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Science as a Field Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kate Borden, Evan McCormick, Paige Phillips </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 8, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="statement-of-question-and-interest" class="level1">
+<h1><strong>Statement of question and interest</strong></h1>
+<p>Question: <em>*What factors in personality and prior drug use are predominantly associated with the use of specific drugs – especially hard drugs?*</em></p>
+<p>For our project we are interested in drug consumption and the association to personality and behavior. For instance, we want to further evaluate the different types of risk to be for each drug. We can split up the drugs based on how they are scheduled or classified as controlled substances. We are primarily interested in distinguishing which factors in personality and prior drug use are predominantly associated with the use of specific drugs. Secondly, we want to assess which factors are predominantly associated with hard drugs.</p>
+<section id="source-dataset-description" class="level2">
+<h2 class="anchored" data-anchor-id="source-dataset-description">Source &amp; Dataset Description</h2>
+<p>We got our database from here, see <a href="https://www.kaggle.com/datasets/obeykhadija/drug-consumptions-uci">Drug Consumptions (UCI)</a></p>
+<p>You can access our data here, see <a href="https://github.com/paph3285/Drug_Consumption">GitHub</a></p>
+<section id="dataset-contents" class="level3">
+<h3 class="anchored" data-anchor-id="dataset-contents"><strong>Dataset Contents:</strong></h3>
+<p>There are 12 attributes that are categorized based on their background demographic and personality measurements. These attributes are assessed across 18 central nervous system (CNS) psychoactive drugs. The drugs selected includes both illicit and licit.</p>
+<section id="featured-attributes-for-quantified-data" class="level4">
+<h4 class="anchored" data-anchor-id="featured-attributes-for-quantified-data"><strong>Featured Attributes for Quantified Data</strong></h4>
+<ul>
+<li><p><em>ID</em>: total number of 1885 records in this database</p></li>
+<li><p><em>Age</em>: participant’s age</p></li>
+<li><p><em>Gender</em>: binary of only fale or female</p></li>
+<li><p><em>Education</em>: participant’s level of education</p></li>
+<li><p><em>Country</em>: participant’s country of origin</p></li>
+<li><p><em>Ethnicity</em>: participant’s ethnicity</p></li>
+</ul>
+</section>
+<section id="featured-attributes-for-personality-measurements-neo-ffi-r" class="level4">
+<h4 class="anchored" data-anchor-id="featured-attributes-for-personality-measurements-neo-ffi-r"><strong>Featured Attributes for Personality measurements (</strong>NEO-FFI-R)</h4>
+<ul>
+<li><p><em>Nscore</em>: neuroticism</p></li>
+<li><p><em>Escore</em>: extraversion</p></li>
+<li><p><em>Oscore</em>: openness to experience.</p></li>
+<li><p><em>Ascore</em>: agreeableness.</p></li>
+<li><p><em>Cscore</em>: conscientiousness.</p></li>
+<li><p><em>Impulsive</em>: impulsiveness (measured by BIS-11)</p></li>
+<li><p><em>SS</em>: sensation seeing (measured by ImpSS)</p></li>
+</ul>
+</section>
+<section id="consumption-usage-of-18-legal-and-illegal-drugs" class="level4">
+<h4 class="anchored" data-anchor-id="consumption-usage-of-18-legal-and-illegal-drugs"><strong>Consumption usage of 18 legal and illegal drugs</strong></h4>
+<ol type="1">
+<li><p><em>Alcohol</em>: alcohol consumption</p></li>
+<li><p><em>Amphet</em>: amphetamines consumption</p></li>
+<li><p><em>Amyl</em>: nitrite consumption</p></li>
+<li><p><em>Benzos</em>: benzodiazepine consumption</p></li>
+<li><p><em>Caff</em>: caffeine consumption</p></li>
+<li><p><em>Cannabis</em>: marijuana consumption</p></li>
+<li><p><em>Choc</em>: chocolate consumption</p></li>
+<li><p><em>Coke</em>: cocaine consumption</p></li>
+<li><p><em>Crack</em>: crack cocaine consumption</p></li>
+<li><p>Ecstasy: ecstasy consumption</p></li>
+<li><p><em>Heroin</em>: heroin consumption</p></li>
+<li><p><em>Ketamine</em>: ketamine consumption</p></li>
+<li><p><em>Legalh</em>: legal highs consumption</p></li>
+<li><p><em>LSD</em>: LSD consumption</p></li>
+<li><p><em>Meth</em>: methadone consumption</p></li>
+<li><p><em>Mushroom</em>: magic mushroom consumption</p></li>
+<li><p><em>Nicotine</em>: nicotine consumption</p></li>
+<li><p><em>Semer</em>: class of fictitious drug Semeron consumption (i.e.&nbsp;control)</p></li>
+<li><p><em>VSA</em>: class of volatile substance abuse consumption</p></li>
+</ol>
+</section>
+<section id="ratings-for-drug-use" class="level4">
+<h4 class="anchored" data-anchor-id="ratings-for-drug-use"><strong>Rating’s for Drug Use</strong></h4>
+<ul>
+<li><p>CL0: Never Used</p></li>
+<li><p>CL1: Used over a Decade Ago</p></li>
+<li><p>CL2: Used in Last Decade</p></li>
+<li><p>CL3: Used in Last Year 59</p></li>
+<li><p>CL4: Used in Last Month</p></li>
+<li><p>CL5: Used in Last Week</p></li>
+<li><p>CL6: Used in Last Day</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="examining-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="examining-the-data">Examining the Data</h2>
+<div class="cell">
+
+</div>
+<section id="subset-dataframe" class="level3">
+<h3 class="anchored" data-anchor-id="subset-dataframe">Subset dataframe</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Alcohol</th>
+<th style="text-align: left;">Amphet</th>
+<th style="text-align: left;">Amyl</th>
+<th style="text-align: left;">Benzos</th>
+<th style="text-align: left;">Cannabis</th>
+<th style="text-align: left;">Coke</th>
+<th style="text-align: left;">Crack</th>
+<th style="text-align: left;">Ecstasy</th>
+<th style="text-align: left;">Heroin</th>
+<th style="text-align: left;">Ketamine</th>
+<th style="text-align: left;">Legalh</th>
+<th style="text-align: left;">LSD</th>
+<th style="text-align: left;">Meth</th>
+<th style="text-align: left;">Mushrooms</th>
+<th style="text-align: left;">Nicotine</th>
+<th style="text-align: left;">VSA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CL5</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL4</td>
+<td style="text-align: left;">CL3</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL4</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL3</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL4</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CL6</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL3</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CL4</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL3</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CL4</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL3</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CL2</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL6</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CL6</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL1</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL0</td>
+<td style="text-align: left;">CL6</td>
+<td style="text-align: left;">CL0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="cleaning-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="cleaning-the-data">Cleaning the data</h3>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 2%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 2%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Alcohol</th>
+<th style="text-align: right;">Amphet</th>
+<th style="text-align: right;">Amyl</th>
+<th style="text-align: right;">Benzos</th>
+<th style="text-align: right;">Cannabis</th>
+<th style="text-align: right;">Coke</th>
+<th style="text-align: right;">Crack</th>
+<th style="text-align: right;">Ecstasy</th>
+<th style="text-align: right;">Heroin</th>
+<th style="text-align: right;">Ketamine</th>
+<th style="text-align: right;">Legalh</th>
+<th style="text-align: right;">LSD</th>
+<th style="text-align: right;">Meth</th>
+<th style="text-align: right;">Mushrooms</th>
+<th style="text-align: right;">Nicotine</th>
+<th style="text-align: right;">VSA</th>
+<th style="text-align: right;">Psychedelics</th>
+<th style="text-align: right;">Sedatives</th>
+<th style="text-align: right;">Stimulants</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<section id="using-frequency-pattern-analysis-to-find-common-patterns-in-drug-use." class="level3">
+<h3 class="anchored" data-anchor-id="using-frequency-pattern-analysis-to-find-common-patterns-in-drug-use.">Using Frequency Pattern Analysis to find common patterns in drug use.</h3>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Apriori
+
+Parameter specification:
+ confidence minval smax arem  aval originalSupport maxtime support minlen
+        0.9    0.1    1 none FALSE            TRUE       5     0.4      2
+ maxlen target  ext
+     10  rules TRUE
+
+Algorithmic control:
+ filter tree heap memopt load sort verbose
+    0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+
+Absolute minimum support count: 753 
+
+set item appearances ...[0 item(s)] done [0.00s].
+set transactions ...[16 item(s), 1884 transaction(s)] done [0.00s].
+sorting and recoding items ... [5 item(s)] done [0.00s].
+creating transaction tree ... done [0.00s].
+checking subsets of size 1 2 3 done [0.00s].
+writing ... [3 rule(s)] done [0.00s].
+creating S4 object  ... done [0.00s].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lhs                     rhs       support   confidence coverage  lift    
+[1] {Nicotine}           =&gt; {Alcohol} 0.6560510 0.9786223  0.6703822 1.015267
+[2] {Cannabis}           =&gt; {Alcohol} 0.6576433 0.9794466  0.6714437 1.016122
+[3] {Cannabis, Nicotine} =&gt; {Alcohol} 0.5594480 0.9850467  0.5679406 1.021932
+    count
+[1] 1236 
+[2] 1239 
+[3] 1054 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Apriori
+
+Parameter specification:
+ confidence minval smax arem  aval originalSupport maxtime support minlen
+        0.9    0.1    1 none FALSE            TRUE       5    0.18      2
+ maxlen target  ext
+     10  rules TRUE
+
+Algorithmic control:
+ filter tree heap memopt load sort verbose
+    0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+
+Absolute minimum support count: 339 
+
+set item appearances ...[0 item(s)] done [0.00s].
+set transactions ...[13 item(s), 1884 transaction(s)] done [0.00s].
+sorting and recoding items ... [10 item(s)] done [0.00s].
+creating transaction tree ... done [0.00s].
+checking subsets of size 1 2 3 4 done [0.00s].
+writing ... [5 rule(s)] done [0.00s].
+creating S4 object  ... done [0.00s].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lhs                          rhs         support   confidence coverage 
+[1] {Benzos, LSD}             =&gt; {Mushrooms} 0.1820594 0.9122340  0.1995754
+[2] {Amphet, LSD}             =&gt; {Ecstasy}   0.1942675 0.9081886  0.2139066
+[3] {Coke, LSD}               =&gt; {Ecstasy}   0.1910828 0.9326425  0.2048832
+[4] {Ecstasy, Legalh, LSD}    =&gt; {Mushrooms} 0.1863057 0.9046392  0.2059448
+[5] {Amphet, Coke, Mushrooms} =&gt; {Ecstasy}   0.1804671 0.9264305  0.1947983
+    lift     count
+[1] 2.476439 343  
+[2] 2.278332 366  
+[3] 2.339678 360  
+[4] 2.455822 351  
+[5] 2.324095 340  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Apriori
+
+Parameter specification:
+ confidence minval smax arem  aval originalSupport maxtime support minlen
+        0.9    0.1    1 none FALSE            TRUE       5    0.11      2
+ maxlen target  ext
+     10  rules TRUE
+
+Algorithmic control:
+ filter tree heap memopt load sort verbose
+    0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+
+Absolute minimum support count: 207 
+
+set item appearances ...[0 item(s)] done [0.00s].
+set transactions ...[11 item(s), 1884 transaction(s)] done [0.00s].
+sorting and recoding items ... [10 item(s)] done [0.00s].
+creating transaction tree ... done [0.00s].
+checking subsets of size 1 2 3 4 5 done [0.00s].
+writing ... [4 rule(s)] done [0.00s].
+creating S4 object  ... done [0.00s].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lhs                       rhs      support   confidence coverage  lift    
+[1] {Coke, Meth}           =&gt; {Benzos} 0.1406582 0.9330986  0.1507431 2.289007
+[2] {Amphet, Meth}         =&gt; {Benzos} 0.1475584 0.9084967  0.1624204 2.228656
+[3] {Amphet, Coke, Meth}   =&gt; {Benzos} 0.1210191 0.9500000  0.1273885 2.330469
+[4] {Amphet, Legalh, Meth} =&gt; {Benzos} 0.1157113 0.9159664  0.1263270 2.246980
+    count
+[1] 265  
+[2] 278  
+[3] 228  
+[4] 218  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Apriori
+
+Parameter specification:
+ confidence minval smax arem  aval originalSupport maxtime support minlen
+        0.9    0.1    1 none FALSE            TRUE       5     0.4      2
+ maxlen target  ext
+     10  rules TRUE
+
+Algorithmic control:
+ filter tree heap memopt load sort verbose
+    0.1 TRUE TRUE  FALSE TRUE    2    TRUE
+
+Absolute minimum support count: 753 
+
+set item appearances ...[0 item(s)] done [0.00s].
+set transactions ...[3 item(s), 1884 transaction(s)] done [0.00s].
+sorting and recoding items ... [3 item(s)] done [0.00s].
+creating transaction tree ... done [0.00s].
+checking subsets of size 1 2 done [0.00s].
+writing ... [2 rule(s)] done [0.00s].
+creating S4 object  ... done [0.00s].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    lhs               rhs         support   confidence coverage  lift     count
+[1] {Psychedelics} =&gt; {Sedatives} 0.4018047 0.9908377  0.4055202 1.017296  757 
+[2] {Stimulants}   =&gt; {Sedatives} 0.5366242 0.9931238  0.5403397 1.019643 1011 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>One pattern found in the data is that people’s drug use tends to cluster around specific groups of drugs. Using Frequency Pattern (FP) analysis, popular drug groupings are found at various levels of popularity.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for colour is already present.
+Adding another scale for colour, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_science_as_a_field_project_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for colour is already present.
+Adding another scale for colour, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_science_as_a_field_project_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When looking at all drug relations, the most common ‘basket’ of drugs used in combination is the three most common drugs used: Alcohol, Cannabis, and Nicotine. While these three are often used together, they are also found to be the main drug used in combination with other, less common drugs. This shows their status as “gateway” drugs. Nearly everyone who uses some of the harder, less common drugs also uses one of these three.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for colour is already present.
+Adding another scale for colour, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_science_as_a_field_project_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When removing the three ‘gateway’ drugs from the market baskets, a new pattern emerges. Around 20% of drug users use a combination of drugs including Cocaine, Amphetamine, LSD, Mushrooms, Benzos and Ecstasy (MDMA). These drugs are a varied group, and could be considered “medium” drugs, although some of them, such as Amphetamines and Benzodiazapines, are as volatile as the ‘harder’ drugs included in this data table. Within this group of drugs, Psilocybin and Ecstasy appear to act as the “gateway”.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for colour is already present.
+Adding another scale for colour, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_science_as_a_field_project_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="group-biases--" class="level5">
+<h5 class="anchored" data-anchor-id="group-biases--">Group Biases -</h5>
+<p>Some personal biases that we can acknowledge from this project and dataset are the “Drugs” listed. We would have refrained from classifying a handful of the drugs presented and would not have included them in the original dataset. Precisely alcohol, caffeine, chocolate, and possibly legal highs.</p>
+<p>A possible explanation to our bias, is due to how prevalent or not these specifics drugs are in our world. Alcohol, caffeine, chocolate, and let’s say marijuana may be more accessibly available, depending on where you live, than let’s say meth, heroin, or benzos, and so forth.</p>
+<p>Another example of bias is social pressure and cultural differences. How that may influence our unconscious biases of different drugs. For example marijuana and psilocybin are becoming popular alternative drugs to use for medical and recreational purposes in the U.S., but that may not reflect the same for in the U.K. or Australia per say. How we perceive the classification and use of these drugs holds lots of bias.</p>
+<p>Lastly, the word “drug(s)” carries a negative connotation behind it. More often than not one mind jumps to 1) illegal, 2) substance use disorder (SUD), 3) problematic. Again, a lot of these are associated with more illicit drugs like cocaine, meth, heroin, etc., not so much with alcohol, chocolate, caffeine, and marijuana. How we perceive these drugs is a bias of itself. If we were to not include some of these drugs in the dataset, that would be unethical of us as a data scientist.</p>
+</section>
+</section>
+</section>
+<section id="sessioninfo" class="level1">
+<h1>SessionInfo</h1>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.2.2 (2022-10-31)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur ... 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] arulesViz_1.5-1 arules_1.7-5    Matrix_1.5-1    forcats_0.5.2  
+ [5] stringr_1.4.1   dplyr_1.0.10    purrr_0.3.5     readr_2.1.3    
+ [9] tidyr_1.2.1     tibble_3.1.8    ggplot2_3.4.0   tidyverse_1.3.2
+
+loaded via a namespace (and not attached):
+ [1] viridis_0.6.2       httr_1.4.4          viridisLite_0.4.1  
+ [4] tidygraph_1.2.2     jsonlite_1.8.3      ggraph_2.1.0       
+ [7] modelr_0.1.9        assertthat_0.2.1    highr_0.9          
+[10] googlesheets4_1.0.1 cellranger_1.1.0    yaml_2.3.6         
+[13] ggrepel_0.9.2       pillar_1.8.1        backports_1.4.1    
+[16] lattice_0.20-45     glue_1.6.2          digest_0.6.30      
+[19] polyclip_1.10-4     rvest_1.0.3         colorspace_2.0-3   
+[22] htmltools_0.5.3     pkgconfig_2.0.3     broom_1.0.1        
+[25] haven_2.5.1         scales_1.2.1        tweenr_2.0.2       
+[28] tzdb_0.3.0          ggforce_0.4.1       timechange_0.1.1   
+[31] googledrive_2.0.0   generics_0.1.3      farver_2.1.1       
+[34] ellipsis_0.3.2      withr_2.5.0         cli_3.4.1          
+[37] magrittr_2.0.3      crayon_1.5.2        readxl_1.4.1       
+[40] evaluate_0.17       fs_1.5.2            fansi_1.0.3        
+[43] MASS_7.3-58.1       xml2_1.3.3          tools_4.2.2        
+[46] hms_1.1.2           gargle_1.2.1        lifecycle_1.0.3    
+[49] munsell_0.5.0       reprex_2.0.2        compiler_4.2.2     
+[52] rlang_1.0.6         grid_4.2.2          rstudioapi_0.14    
+[55] htmlwidgets_1.5.4   igraph_1.3.5        labeling_0.4.2     
+[58] rmarkdown_2.18      gtable_0.3.1        DBI_1.1.3          
+[61] graphlayouts_0.8.4  R6_2.5.1            gridExtra_2.3      
+[64] lubridate_1.9.0     knitr_1.40          fastmap_1.1.0      
+[67] utf8_1.2.2          stringi_1.7.8       Rcpp_1.0.9         
+[70] vctrs_0.5.0         dbplyr_2.2.1        tidyselect_1.2.0   
+[73] xfun_0.34          </code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
